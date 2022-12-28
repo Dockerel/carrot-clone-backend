@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "carrot-clone-backend"
+version = "0.1.0"
+description = ""
+authors = ["Giheon <74302278+Dockerel@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "carrot_clone_backend"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.1.4"
+black = "^22.12.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
