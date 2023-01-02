@@ -50,7 +50,9 @@ SYSTEM_APPS = [
 
 CUSTOM_APPS = [
     "common.apps.CommonConfig",
+    "users.apps.UsersConfig",
     "products.apps.ProductsConfig",
+    "dms.apps.DmsConfig",
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
@@ -137,3 +139,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Auth
+AUTH_USER_MODEL = "users.User"
