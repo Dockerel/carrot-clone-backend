@@ -17,3 +17,13 @@ class User(AbstractUser):
         blank=True,
         null=True,
     )
+
+    def rating(user):
+        count = user.reviews.count()
+        if count == 0:
+            return 0
+        else:
+            total_rating = 0
+            for review in user.reviews.all().values("rating"):
+                total_rating += review["rating"]
+            return round(total_rating / count, 2)

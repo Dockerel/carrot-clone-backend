@@ -45,4 +45,5 @@ class CustomUserAdmin(UserAdmin):
         "avatar",
         "phone_nb",
         "address",
+        "rating",
     )

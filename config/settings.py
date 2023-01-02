@@ -53,6 +53,8 @@ CUSTOM_APPS = [
     "users.apps.UsersConfig",
     "products.apps.ProductsConfig",
     "dms.apps.DmsConfig",
+    "wishlists.apps.WishlistsConfig",
+    "reviews.apps.ReviewsConfig",
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
