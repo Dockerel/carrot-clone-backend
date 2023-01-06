@@ -6,6 +6,9 @@ from users.serializer import TinyUserSerializer
 class ProductSerializer(ModelSerializer):
 
     is_owner = SerializerMethodField()
+    buyer = TinyUserSerializer(
+        read_only=True,
+    )
 
     class Meta:
         model = Product
@@ -20,3 +23,12 @@ class ProductSerializer(ModelSerializer):
         if request:
             return product.owner == request.user
         return False
+
+
+class TinyProductSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = (
+            "name",
+            "price",
+        )

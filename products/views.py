@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.exceptions import NotFound
 from .models import Product
 from .serializer import ProductSerializer
+from users.models import User
 
 
 class Products(APIView):
@@ -72,3 +73,34 @@ class ProductDetail(APIView):
         product = self.get_object(pk)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class BuyProduct(APIView):
+    def get_product(self, pk):
+        try:
+            return Product.objects.get(pk=pk)
+        except Product.DoesNotExist:
+            raise NotFound
+
+    def get_user(self, username):
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFound
+
+    def put(self, request, pk, username):
+        product = self.get_product(pk)
+        buyer = self.get_user(username)
+        serializer = ProductSerializer(
+            product,
+            data=request.data,
+            partial=True,
+        )
+        if serializer.is_valid() and product.buyer == None:
+            updated_product = serializer.save(buyer=buyer)
+            serializer = ProductSerializer(updated_product)
+            return Response(serializer.data)
+        else:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+            )

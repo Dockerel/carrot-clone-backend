@@ -25,6 +25,12 @@ class Product(CommonModel):
         on_delete=models.CASCADE,
         related_name="products",
     )
+    buyer = models.OneToOneField(
+        "users.User",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
     kind = models.CharField(
         max_length=30,
         choices=productKindChoices.choices,

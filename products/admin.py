@@ -6,9 +6,11 @@ from .models import Product
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
         "name",
+        "pk",
         "price",
         "description",
         "owner",
+        "buyer",
         "kind",
         "is_reported",
     )

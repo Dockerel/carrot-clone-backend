@@ -6,6 +6,7 @@ from rest_framework.exceptions import ParseError, NotFound
 from django.contrib.auth import authenticate, login, logout
 from .models import User
 from .serializer import SignUpSerializer, UserSerializer, PublicUserSerializer
+from reviews.serializer import ReviewSerializer
 
 
 class SignUp(APIView):
@@ -90,3 +91,26 @@ class PublicUser(APIView):
         user = self.get_object(username)
         serializer = PublicUserSerializer(user)
         return Response(serializer.data)
+
+
+class PublicReview(APIView):
+    def get_object(self, username):
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFound
+
+    def get(self, request, username):
+        user = self.get_object(username)
+        reviews = user.reviews.all()
+        serializer = ReviewSerializer(
+            reviews,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    # def post(self, request, username):
+    #     user=self.get_object(username)
+    #     serializer=ReviewSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         new_review=serializer.save()
