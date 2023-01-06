@@ -2,10 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.exceptions import ParseError
+from rest_framework.exceptions import ParseError, NotFound
 from django.contrib.auth import authenticate, login, logout
 from .models import User
-from .serializer import SignUpSerializer, UserSerializer
+from .serializer import SignUpSerializer, UserSerializer, PublicUserSerializer
 
 
 class SignUp(APIView):
@@ -77,3 +77,16 @@ class SignOut(APIView):
     def post(self, request):
         logout(request)
         return Response({"ok": "Bye Bye"})
+
+
+class PublicUser(APIView):
+    def get_object(self, username):
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFound
+
+    def get(self, request, username):
+        user = self.get_object(username)
+        serializer = PublicUserSerializer(user)
+        return Response(serializer.data)
