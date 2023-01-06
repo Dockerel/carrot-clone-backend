@@ -10,3 +10,28 @@ class TinyUserSerializer(ModelSerializer):
             "username",
             "phone_nb",
         )
+
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        exclude = (
+            "password",
+            "last_login",
+            "is_superuser",
+            "is_staff",
+            "is_active",
+            "date_joined",
+            "groups",
+            "user_permissions",
+        )
+
+
+class SignUpSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "email",
+            "phone_nb",
+        )
