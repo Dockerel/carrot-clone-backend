@@ -68,3 +68,12 @@ class SignIn(APIView):
                 {"error": "Wrong password"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class SignOut(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        logout(request)
+        return Response({"ok": "Bye Bye"})
