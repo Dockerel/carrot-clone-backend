@@ -6,14 +6,14 @@ class Review(CommonModel):
 
     """Review from a User to a Room or Experience"""
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         "users.User",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         related_name="reviews",
     )
-    product = models.ForeignKey(
+    product = models.OneToOneField(
         "products.Product",
         null=True,
         blank=True,

@@ -108,9 +108,3 @@ class PublicReview(APIView):
             many=True,
         )
         return Response(serializer.data)
-
-    # def post(self, request, username):
-    #     user=self.get_object(username)
-    #     serializer=ReviewSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         new_review=serializer.save()
