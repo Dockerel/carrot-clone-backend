@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+from rest_framework import status
 from .models import ChattingRoom
 from .serializer import ChattingRoomSerializer
 from users.models import User
@@ -17,15 +18,20 @@ class ChattingRooms(APIView):
 
 
 class CreateChattingRoom(APIView):
-    def get_object(self, username):
+    def get_user(self, username):
         try:
             return User.objects.get(username=username)
         except User.DoesNotExist:
             raise NotFound
 
     def post(self, request, username):
-        # 이미 user1 user2 가 있는 채팅방이 만들어져있으면 안만드는걸로....
-        user = self.get_object(username)
+        user = self.get_user(username)
+        exists = ChattingRoom.objects.filter(users__in=[user, request.user]).exists()
+        if exists:
+            return Response(
+                {"ok": "Chatting room already exists"},
+                status=status.HTTP_200_OK,
+            )
         serializer = ChattingRoomSerializer(data=request.data)
         if serializer.is_valid():
             new_chattingroom = serializer.save(

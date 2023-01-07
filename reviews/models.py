@@ -6,7 +6,7 @@ class Review(CommonModel):
 
     """Review from a User to a Room or Experience"""
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         "users.User",
         null=True,
         blank=True,
