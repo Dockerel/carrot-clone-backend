@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import status
-from .models import ChattingRoom
-from .serializer import ChattingRoomSerializer
+from .models import ChattingRoom, Message
+from .serializer import ChattingRoomSerializer, MessageSerializer
 from users.models import User
 
 
@@ -41,3 +41,36 @@ class CreateChattingRoom(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+
+
+class Messages(APIView):
+    def get_chattingroom(self, pk):
+        try:
+            return ChattingRoom.objects.get(pk=pk)
+        except ChattingRoom.DoesNotExist:
+            raise NotFound
+
+    def get(self, request, pk):
+        chattingRoom = self.get_chattingroom(pk)
+        Messages = Message.objects.filter(room=chattingRoom)
+        serializer = MessageSerializer(
+            Messages,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request, pk):
+        chattingRoom = self.get_chattingroom(pk)
+        serializer = MessageSerializer(data=request.data)
+        if serializer.is_valid():
+            new_message = serializer.save(
+                room=chattingRoom,
+                user=request.user,
+            )
+            serializer = MessageSerializer(new_message)
+            return Response(serializer.data)
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
