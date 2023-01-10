@@ -10,11 +10,13 @@ class ProductSerializer(ModelSerializer):
     buyer = TinyUserSerializer(
         read_only=True,
     )
+    owner = TinyUserSerializer(
+        read_only=True,
+    )
 
     class Meta:
         model = Product
         exclude = (
-            "owner",
             "created_at",
             "updated_at",
         )
