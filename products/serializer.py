@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import Product
 from users.serializer import TinyUserSerializer
-from medias.serializer import PhotoDetailSerializer
+from medias.serializer import PhotoDetailSerializer, TinyPhotoSerializer
 
 
 class ProductSerializer(ModelSerializer):
@@ -11,6 +11,10 @@ class ProductSerializer(ModelSerializer):
         read_only=True,
     )
     owner = TinyUserSerializer(
+        read_only=True,
+    )
+    photos = TinyPhotoSerializer(
+        many=True,
         read_only=True,
     )
 
@@ -34,7 +38,9 @@ class ProductDetailSerializer(ModelSerializer):
     buyer = TinyUserSerializer(
         read_only=True,
     )
-
+    owner = TinyUserSerializer(
+        read_only=True,
+    )
     photos = PhotoDetailSerializer(
         many=True,
         read_only=True,
@@ -42,11 +48,7 @@ class ProductDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Product
-        exclude = (
-            "owner",
-            "created_at",
-            "updated_at",
-        )
+        exclude = ("updated_at",)
 
     def get_is_owner(self, product):
         request = self.context.get("request")

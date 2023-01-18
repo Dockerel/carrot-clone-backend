@@ -36,28 +36,6 @@ class Products(APIView):
             )
 
 
-class ProductsCategory(APIView):
-    def get_object(self, kind):
-        try:
-            return Product.objects.filter(kind=kind)
-        except Product.DoesNotExist:
-            raise NotFound
-
-    def get(self, request, kind):
-        if kind in Product.productKindChoices:
-            products = self.get_object(kind)
-            serializer = ProductSerializer(
-                products,
-                many=True,
-            )
-            return Response(serializer.data)
-        else:
-            return Response(
-                {"error": "이런 kind 없어요"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-
 class ProductDetail(APIView):
 
     permission_classes = [IsAuthenticatedOrReadOnly]

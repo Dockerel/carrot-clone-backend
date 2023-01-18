@@ -10,6 +10,7 @@ class TinyUserSerializer(ModelSerializer):
             "username",
             "phone_nb",
             "address",
+            "avatar",
         )
 
 
