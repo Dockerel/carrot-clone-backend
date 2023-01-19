@@ -8,9 +8,12 @@ class User(AbstractUser):
 
     avatar = models.URLField(
         blank=True,
+        null=True,
     )
     phone_nb = models.CharField(
         max_length=13,
+        blank=True,
+        null=True,
     )
     address = models.CharField(
         max_length=250,
