@@ -43,6 +43,31 @@ class Me(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+    def put(self, request):
+        user = request.user
+        serializer = UserSerializer(
+            user,
+            data=request.data,
+            partial=True,
+        )
+        if serializer.is_valid():
+            updated_user = serializer.save()
+            serializer = UserSerializer(updated_user)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                serializer.errors,
+                status=status._400,
+            )
+
+    def delete(self, request):
+        user = request.user
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class SignIn(APIView):
     def post(self, request):

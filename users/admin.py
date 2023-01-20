@@ -10,11 +10,14 @@ class CustomUserAdmin(UserAdmin):
             "Profile",
             {
                 "fields": (
+                    "first_name",
+                    "last_name",
                     "username",
                     "password",
                     "avatar",
                     "phone_nb",
                     "address",
+                    "detailed_address",
                 )
             },
         ),

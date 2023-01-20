@@ -12,13 +12,17 @@ class User(AbstractUser):
     )
     phone_nb = models.CharField(
         max_length=13,
+        default="",
         blank=True,
         null=True,
     )
     address = models.CharField(
         max_length=250,
-        blank=True,
-        null=True,
+        default="",
+    )
+    detailed_address = models.CharField(
+        max_length=250,
+        default="",
     )
 
     def rating(user):
