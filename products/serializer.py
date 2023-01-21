@@ -64,3 +64,18 @@ class TinyProductSerializer(ModelSerializer):
             "name",
             "price",
         )
+
+
+class ProductUserSerializer(ModelSerializer):
+    photos = TinyPhotoSerializer(
+        many=True,
+        read_only=True,
+    )
+
+    class Meta:
+        model = Product
+        fields = (
+            "name",
+            "price",
+            "photos",
+        )

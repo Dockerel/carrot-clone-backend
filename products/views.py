@@ -5,7 +5,7 @@ from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from .models import Product
-from .serializer import ProductSerializer, ProductDetailSerializer
+from .serializer import ProductSerializer, ProductDetailSerializer, ProductUserSerializer
 from users.models import User
 from medias.serializer import PhotoDetailSerializer
 
@@ -131,3 +131,22 @@ class ProductPhotoUpload(APIView):
                 serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class UserProduct(APIView):
+    def get_object(self, username):
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFound
+
+    def get(self, request, username):
+        user = self.get_object(username)
+        products = Product.objects.filter(
+            owner=user,
+        )
+        serializer = ProductUserSerializer(
+            products,
+            many=True,
+        )
+        return Response(serializer.data)
