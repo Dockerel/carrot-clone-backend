@@ -3,7 +3,7 @@ product upload -> buyer 등록 -> review -> 머시기
 ---
 
 PRODUCT
-
+/products/@username:str : get
 /products : get, post
 /products/pk:int : get, put, delete
 /products/pk:int/username:str : put (username 유저가 is_sold를 true로, buyer을 update)

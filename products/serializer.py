@@ -75,7 +75,9 @@ class ProductUserSerializer(ModelSerializer):
     class Meta:
         model = Product
         fields = (
+            "pk",
             "name",
             "price",
             "photos",
+            "is_sold",
         )

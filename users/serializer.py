@@ -38,6 +38,7 @@ class PublicUserSerializer(ModelSerializer):
             "email",
             "avatar",
             "rating",
+            "address",
         )
 
 

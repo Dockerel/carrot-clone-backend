@@ -150,3 +150,32 @@ class UserProduct(APIView):
             many=True,
         )
         return Response(serializer.data)
+
+
+class ProductSold(APIView):
+    def get_object(self, pk):
+        try:
+            return Product.objects.get(pk=pk)
+        except Product.DoesNotExist:
+            raise NotFound
+
+    def post(self, request, pk):
+        product = self.get_object(pk)
+        data = {"is_sold": True}
+        serializer = ProductSerializer(
+            product,
+            data=data,
+            partial=True,
+        )
+        if serializer.is_valid():
+            sold_product = serializer.save()
+            serializer = ProductSerializer(sold_product)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
