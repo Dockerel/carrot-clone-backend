@@ -8,6 +8,15 @@ class TinyPhotoSerializer(ModelSerializer):
         fields = ("file",)
 
 
+class PhotoUploadSerializer(ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = (
+            "description",
+            "file",
+        )
+
+
 class PhotoDetailSerializer(ModelSerializer):
     class Meta:
         model = Photo
