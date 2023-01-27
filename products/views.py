@@ -26,7 +26,9 @@ class Products(APIView):
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
-            product = serializer.save()
+            product = serializer.save(
+                owner=request.user,
+            )
             serializer = ProductSerializer(product)
             return Response(serializer.data)
         else:
