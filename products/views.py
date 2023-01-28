@@ -108,6 +108,7 @@ class BuyProduct(APIView):
                 return Response(serializer.data)
             else:
                 return Response(
+                    serializer.errors,
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         else:
@@ -185,3 +186,14 @@ class ProductSold(APIView):
                 serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class PurchaseHistory(APIView):
+    def get(self, request, username):
+        user = User.objects.get(username=username)
+        products = Product.objects.filter(buyer=user)
+        serializer = ProductSerializer(
+            products,
+            many=True,
+        )
+        return Response(serializer.data)
