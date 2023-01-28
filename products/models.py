@@ -41,6 +41,9 @@ class Product(CommonModel):
     is_sold = models.BooleanField(
         default=False,
     )
+    review_exists = models.BooleanField(
+        default=False,
+    )
 
     def __str__(self):
         return self.name
