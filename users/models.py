@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from reviews.models import Review
 
 
 class User(AbstractUser):
@@ -26,11 +27,13 @@ class User(AbstractUser):
     )
 
     def rating(user):
-        count = user.reviews.count()
+        products = user.products.all()
+        reviews = Review.objects.filter(product__in=products)
+        count = len(reviews)
         if count == 0:
             return 0
         else:
             total_rating = 0
-            for review in user.reviews.all().values("rating"):
+            for review in reviews.values("rating"):
                 total_rating += review["rating"]
             return round(total_rating / count, 2)

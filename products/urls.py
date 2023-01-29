@@ -7,6 +7,7 @@ urlpatterns = [
     path("@<str:username>/purchase-history", views.PurchaseHistory.as_view()),
     path("<int:pk>", views.ProductDetail.as_view()),
     path("<int:pk>/sold", views.ProductSold.as_view()),
+    path("<int:pk>/review-uploaded", views.ProductReviewUploaded.as_view()),
     path("<int:pk>/photos", views.ProductPhotoUpload.as_view()),
     path("<int:pk>/<str:username>", views.BuyProduct.as_view()),
 ]

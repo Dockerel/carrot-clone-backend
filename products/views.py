@@ -197,3 +197,23 @@ class PurchaseHistory(APIView):
             many=True,
         )
         return Response(serializer.data)
+
+
+class ProductReviewUploaded(APIView):
+    def put(self, request, pk):
+        product = Product.objects.get(pk=pk)
+        data = {"review_exists": True}
+        serializer = ProductSerializer(
+            product,
+            data=data,
+            partial=True,
+        )
+        if product.buyer.username == request.user.username:
+            if serializer.is_valid():
+                updated_product = serializer.save()
+                serializer = ProductSerializer(updated_product)
+                return Response(serializer.data)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise NotAuthenticated
