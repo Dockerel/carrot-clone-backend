@@ -6,23 +6,13 @@ class ChattingRoom(CommonModel):
 
     """Room Model Definition"""
 
-    sender = models.ForeignKey(
+    users = models.ManyToManyField(
         "users.User",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="chatting_rooms_sender",
-    )
-    receiver = models.ForeignKey(
-        "users.User",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="chatting_rooms_receiver",
+        related_name="chatting_rooms",
     )
 
     def __str__(self) -> str:
-        return f"Chatting Room : {self.sender} / {self.receiver}"
+        return f"Chatting Room : {self.pk}"
 
 
 class Message(CommonModel):

@@ -9,7 +9,8 @@ from users.models import User
 
 class ChattingRooms(APIView):
     def get(self, request):
-        chattingRooms = ChattingRoom.objects.all()
+        user = request.user
+        chattingRooms = user.chatting_rooms.all()
         serializer = ChattingRoomSerializer(
             chattingRooms,
             many=True,
@@ -26,21 +27,29 @@ class CreateChattingRoom(APIView):
 
     def post(self, request, username):
         user = self.get_user(username)
-        exists = ChattingRoom.objects.filter(users__in=[user, request.user]).exists()
-        if exists:
-            return Response(
-                {"ok": "Chatting room already exists"},
-                status=status.HTTP_200_OK,
-            )
-        serializer = ChattingRoomSerializer(data=request.data)
-        if serializer.is_valid():
-            new_chattingroom = serializer.save(
-                user=[user, request.user],
-            )
-            serializer = ChattingRoomSerializer(new_chattingroom)
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors)
+        exists = user.chatting_rooms.all()
+
+        for room in ChattingRoomSerializer(
+            exists,
+            many=True,
+        ).data:
+            print(room)
+
+        return Response()
+        # if exists:
+        #     return Response(
+        #         {"ok": "Chatting room already exists"},
+        #         status=status.HTTP_302_FOUND,
+        #     )
+        # serializer = ChattingRoomSerializer(data=request.data)
+        # if serializer.is_valid():
+        #     new_chattingroom = serializer.save(
+        #         user=[user, request.user],
+        #     )
+        #     serializer = ChattingRoomSerializer(new_chattingroom)
+        #     return Response(serializer.data)
+        # else:
+        #     return Response(serializer.errors)
 
 
 class Messages(APIView):

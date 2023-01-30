@@ -17,7 +17,7 @@ class ChattingRoomSerializer(ModelSerializer):
 class TinyChattingRoomSerializer(ModelSerializer):
     class Meta:
         model = ChattingRoom
-        fields = ("__str__",)
+        fields = "__str__"
 
 
 class MessageSerializer(ModelSerializer):
