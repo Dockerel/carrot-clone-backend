@@ -62,6 +62,7 @@ CUSTOM_APPS = [
     "dms.apps.DmsConfig",
     "reviews.apps.ReviewsConfig",
     "medias.apps.MediasConfig",
+    "notifications.apps.NotificationsConfig",
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + CUSTOM_APPS + THIRD_PARTY_APPS

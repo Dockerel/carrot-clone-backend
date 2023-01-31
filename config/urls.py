@@ -8,4 +8,5 @@ urlpatterns = [
     path("api/v1/photos/", include("medias.urls")),
     path("api/v1/reviews/", include("reviews.urls")),
     path("api/v1/dms/", include("dms.urls")),
+    path("api/v1/notifications/", include("notifications.urls")),
 ]
