@@ -61,3 +61,9 @@ class SignUpSerializer(ModelSerializer):
             "email",
             "phone_nb",
         )
+
+
+class JustUsernameSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username",)

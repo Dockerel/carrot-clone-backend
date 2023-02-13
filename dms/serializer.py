@@ -1,10 +1,10 @@
 from rest_framework.serializers import ModelSerializer
 from .models import ChattingRoom, Message
-from users.serializer import TinyUserSerializer
+from users.serializer import JustUsernameSerializer
 
 
 class ChattingRoomSerializer(ModelSerializer):
-    users = TinyUserSerializer(
+    users = JustUsernameSerializer(
         read_only=True,
         many=True,
     )
@@ -21,11 +21,7 @@ class TinyChattingRoomSerializer(ModelSerializer):
 
 
 class MessageSerializer(ModelSerializer):
-    user = TinyUserSerializer(
-        read_only=True,
-    )
-
-    room = TinyChattingRoomSerializer(
+    user = JustUsernameSerializer(
         read_only=True,
     )
 
@@ -34,5 +30,5 @@ class MessageSerializer(ModelSerializer):
         fields = (
             "text",
             "user",
-            "room",
+            "created_at",
         )

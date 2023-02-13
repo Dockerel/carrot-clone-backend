@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, NotAuthenticated
 from rest_framework import status
 from .models import ChattingRoom, Message
 from .serializer import ChattingRoomSerializer, MessageSerializer
@@ -26,30 +26,31 @@ class CreateChattingRoom(APIView):
             raise NotFound
 
     def post(self, request, username):
-        user = self.get_user(username)
-        exists = user.chatting_rooms.all()
-
-        for room in ChattingRoomSerializer(
-            exists,
-            many=True,
-        ).data:
-            print(room)
-
-        return Response()
-        # if exists:
-        #     return Response(
-        #         {"ok": "Chatting room already exists"},
-        #         status=status.HTTP_302_FOUND,
-        #     )
-        # serializer = ChattingRoomSerializer(data=request.data)
-        # if serializer.is_valid():
-        #     new_chattingroom = serializer.save(
-        #         user=[user, request.user],
-        #     )
-        #     serializer = ChattingRoomSerializer(new_chattingroom)
-        #     return Response(serializer.data)
-        # else:
-        #     return Response(serializer.errors)
+        user1 = self.get_user(username)
+        user2 = request.user
+        room1 = ChattingRoom.objects.filter(users__in=[user1])
+        room2 = ChattingRoom.objects.filter(users__in=[user2])
+        room = room1.intersection(room2)
+        if room:
+            serializer = ChattingRoomSerializer(room)
+            return Response(
+                {"No": "Chatting room already exists"},
+                status=status.HTTP_302_FOUND,
+            )
+        else:
+            serializer = ChattingRoomSerializer(
+                data=request.data,
+            )
+            if serializer.is_valid():
+                new_chattingroom = serializer.save(
+                    users=[user1, user2],
+                )
+                serializer = ChattingRoomSerializer(
+                    new_chattingroom,
+                )
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)
 
 
 class Messages(APIView):
@@ -59,17 +60,26 @@ class Messages(APIView):
         except ChattingRoom.DoesNotExist:
             raise NotFound
 
+    def authenticate_dms(self, user, chattingroom):
+        if user not in chattingroom:
+            return False
+        return True
+
     def get(self, request, pk):
         chattingRoom = self.get_chattingroom(pk)
-        Messages = Message.objects.filter(room=chattingRoom)
+        if not self.authenticate_dms(request.user, chattingRoom.users.all()):
+            raise NotAuthenticated
+        messages = Message.objects.filter(room=chattingRoom)
         serializer = MessageSerializer(
-            Messages,
+            messages,
             many=True,
         )
         return Response(serializer.data)
 
     def post(self, request, pk):
         chattingRoom = self.get_chattingroom(pk)
+        if not self.authenticate_dms(request.user, chattingRoom.users.all()):
+            raise NotAuthenticated
         serializer = MessageSerializer(data=request.data)
         if serializer.is_valid():
             new_message = serializer.save(
