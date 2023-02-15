@@ -66,4 +66,7 @@ class SignUpSerializer(ModelSerializer):
 class JustUsernameSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ("username",)
+        fields = (
+            "username",
+            "avatar",
+        )

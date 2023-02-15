@@ -18,12 +18,36 @@ class ChattingRooms(APIView):
         return Response(serializer.data)
 
 
+class UpdateChattingRoom(APIView):
+    def put(self, request, pk):
+        room = ChattingRoom.objects.get(pk=pk)
+        serializer = ChattingRoomSerializer(
+            room,
+            data=request.data,
+        )
+        if serializer.is_valid():
+            updated_room = serializer.save()
+            serializer = ChattingRoomSerializer(updated_room)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+
+
 class CreateChattingRoom(APIView):
     def get_user(self, username):
         try:
             return User.objects.get(username=username)
         except User.DoesNotExist:
             raise NotFound
+
+    def get(self, request, username):
+        user1 = self.get_user(username)
+        user2 = request.user
+        room1 = ChattingRoom.objects.filter(users__in=[user1])
+        room2 = ChattingRoom.objects.filter(users__in=[user2])
+        room = room1.intersection(room2)
+        serializer = ChattingRoomSerializer(room[0])
+        return Response(serializer.data)
 
     def post(self, request, username):
         user1 = self.get_user(username)
@@ -32,10 +56,8 @@ class CreateChattingRoom(APIView):
         room2 = ChattingRoom.objects.filter(users__in=[user2])
         room = room1.intersection(room2)
         if room:
-            serializer = ChattingRoomSerializer(room)
             return Response(
-                {"No": "Chatting room already exists"},
-                status=status.HTTP_302_FOUND,
+                status=status.HTTP_200_OK,
             )
         else:
             serializer = ChattingRoomSerializer(
@@ -77,6 +99,7 @@ class Messages(APIView):
         return Response(serializer.data)
 
     def post(self, request, pk):
+        print(request.data)
         chattingRoom = self.get_chattingroom(pk)
         if not self.authenticate_dms(request.user, chattingRoom.users.all()):
             raise NotAuthenticated

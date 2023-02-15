@@ -28,6 +28,7 @@ class MessageSerializer(ModelSerializer):
     class Meta:
         model = Message
         fields = (
+            "pk",
             "text",
             "user",
             "created_at",
